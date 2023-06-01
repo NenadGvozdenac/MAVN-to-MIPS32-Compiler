@@ -1,4 +1,2 @@
-﻿  SyntaxAnalysis.cpp
-C:\Users\matri\Desktop\OPPISA PROJEKAT\src\IR.h(194): warning C4715: 'Instruction::getTypeToString': not all control paths return a value
-  LINK : C:\Users\matri\Desktop\OPPISA PROJEKAT\src\Debug\LexicalAnalysis.exe not found or not built by the last incremental link; performing full link
+﻿  main.cpp
   LexicalAnalysis.vcxproj -> C:\Users\matri\Desktop\OPPISA PROJEKAT\src\Debug\LexicalAnalysis.exe

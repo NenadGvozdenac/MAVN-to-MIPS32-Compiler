@@ -162,8 +162,8 @@ int main()
 	std::string multiplyFajlInput = "../examples/multiply.mavn";
 	std::string multiplyFajlOutput = "../examples/multiply.S";
 
-	// TestirajKompajliranje(simpleFajlInput, simpleFajlOutput);
-	TestirajKompajliranje(multiplyFajlInput, simpleFajlOutput);
+	TestirajKompajliranje(simpleFajlInput, simpleFajlOutput);
+	// TestirajKompajliranje(multiplyFajlInput, simpleFajlOutput);
 
 	return 0;
 }

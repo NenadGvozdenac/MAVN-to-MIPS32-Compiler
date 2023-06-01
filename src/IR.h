@@ -205,7 +205,7 @@ public:
 	Variables m_dst;
 	Variables m_src;
 	int m_number;
-public:
+
 	Variables m_use;
 	Variables m_def;
 	Variables m_in;

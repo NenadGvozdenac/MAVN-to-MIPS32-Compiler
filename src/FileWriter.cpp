@@ -39,7 +39,7 @@ void FileWriter::write()
 		{
 			int commandPos = tempString.find("`s");
 			tempString.replace(commandPos, 2, instruction->getSrc().front()->getVariableType() == Variable::MEM_VAR ? instruction->getSrc().front()->getName() : registers[instruction->getSrc().front()->getVariableAssignment()]);
-			instruction->getSrc().remove(instruction->getSrc().front());
+			instruction->m_src.remove(instruction->getSrc().front());
 		}
 
 		while (tempString.find("`i") != std::string::npos) 
