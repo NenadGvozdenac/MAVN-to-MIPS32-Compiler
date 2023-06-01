@@ -13,7 +13,7 @@
 
 using namespace std;
 
-void TestirajKompajliranje(std::string inputFile, std::string outputFile) 
+void TestCompiler(std::string inputFile, std::string outputFile)
 {
 	try
 	{
@@ -156,14 +156,14 @@ void TestirajKompajliranje(std::string inputFile, std::string outputFile)
 
 int main()
 {
-	std::string simpleFajlInput = "../examples/simple.mavn";
-	std::string simpleFajlOutput = "../examples/simple.S";
+	std::string simpleFailInput = "../examples/simple.mavn";
+	std::string simpleFailOutput = "../examples/simple.S";
 
-	std::string multiplyFajlInput = "../examples/multiply.mavn";
-	std::string multiplyFajlOutput = "../examples/multiply.S";
+	std::string multiplyFailInput = "../examples/multiply.mavn";
+	std::string multiplyFailOutput = "../examples/multiply.S";
 
-	TestirajKompajliranje(simpleFajlInput, simpleFajlOutput);
-	// TestirajKompajliranje(multiplyFajlInput, simpleFajlOutput);
+	TestCompiler(simpleFailInput, simpleFailOutput);
+	TestCompiler(multiplyFailInput, multiplyFailOutput);
 
 	return 0;
 }
