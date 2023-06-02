@@ -36,9 +36,11 @@ enum TokenType
 	T_BLTZ,			// bltz
 	T_B,			// b
 	T_NOP,			// nop
-	T_NOR,			// nor
+
+	// added operators
+	T_ADDU,			// addu
 	T_OR,			// or
-	T_SLT,			// slt
+	T_LB,			// lb
 
 	// operators
 	T_COMMA,		//,
@@ -70,9 +72,9 @@ enum InstructionType
 	I_BLTZ,
 	I_B,
 	I_NOP,
-	I_SLT,
+	I_ADDU,
 	I_OR,
-	I_NOR
+	I_LB
 };
 
 /**

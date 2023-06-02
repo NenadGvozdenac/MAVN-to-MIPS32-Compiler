@@ -1,1 +1,3 @@
-﻿  LexicalAnalysis.vcxproj -> C:\Users\matri\Desktop\OPPISA PROJEKAT\src\Debug\LexicalAnalysis.exe
+﻿  SyntaxAnalysis.cpp
+C:\Users\matri\Desktop\OPPISA PROJEKAT\src\IR.h(195): warning C4715: 'Instruction::getTypeToString': not all control paths return a value
+  LexicalAnalysis.vcxproj -> C:\Users\matri\Desktop\OPPISA PROJEKAT\src\Debug\LexicalAnalysis.exe

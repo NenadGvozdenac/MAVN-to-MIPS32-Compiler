@@ -47,7 +47,7 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 			cout << "----------------------------- EXCEPTION! -------------------------------" << endl;
 			cout << "----------------------- Lexical analysis failed! -----------------------" << endl;
 			cout << "------------------------------------------------------------------------" << endl << endl;
-			throw new runtime_error("\nException! Lexical Analysis failed!\n");
+			throw runtime_error("\nException! Lexical Analysis failed!\n");
 		}
 
 		Variables variables;
@@ -67,14 +67,15 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 			cout << "------------------------------------------------------------------------" << endl;
 			cout << "------------------------------------------------------------------------" << endl << endl;
 		}
-		else {
+		else 
+		{
 			cout << endl;
 			cout << "------------------------------------------------------------------------" << endl;
 			cout << "------------------------------------------------------------------------" << endl;
 			cout << "----------------------------- EXCEPTION! -------------------------------" << endl;
 			cout << "----------------------- Syntax analysis failed! ------------------------" << endl;
 			cout << "------------------------------------------------------------------------" << endl << endl;
-			throw new runtime_error("\nException! Syntax Analysis failed!\n");
+			throw runtime_error("\nException! Syntax Analysis failed!\n");
 		}
 
 		printAll(variables, instructions, labels);

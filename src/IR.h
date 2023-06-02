@@ -171,17 +171,9 @@ public:
 		{
 			return "nop";
 		}
-		else if (m_type == InstructionType::I_NOR) 
-		{
-			return "nor";
-		}
 		else if (m_type == InstructionType::I_OR) 
 		{
 			return "or";
-		}
-		else if (m_type == InstructionType::I_SLT) 
-		{
-			return "slt";
 		}
 		else if (m_type == InstructionType::I_SUB) 
 		{
@@ -190,6 +182,15 @@ public:
 		else if (m_type == InstructionType::I_SW) 
 		{
 			return "sw";
+		}
+		else if (m_type == InstructionType::I_ADDU) {
+			return "addu";
+		}
+		else if (m_type == InstructionType::I_OR) {
+			return "or";
+		}
+		else if (m_type == InstructionType::I_LB) {
+			return "lb";
 		}
 	}
 
@@ -229,5 +230,7 @@ typedef std::list<Instruction*> Instructions;
 bool variableExists(Variable* variable, Variables variables);
 
 void printAll(Variables variables, Instructions instructions, Labels labels);
+
+bool labelExists(Labels labels, Label* label);
 
 #endif

@@ -2,6 +2,7 @@
 #include <iomanip>
 
 #include "SyntaxAnalysis.h"
+#include "IR.h"
 
 using namespace std;
 
@@ -86,6 +87,7 @@ void SyntaxAnalysis::S()
 	if (errorFound == false) {
 		string variableName;
 		string variableValue;
+		Label* label;
 		Variable* v;
 		
 		switch (this->currentToken.getType()) 
@@ -100,6 +102,12 @@ void SyntaxAnalysis::S()
 				eat(T_NUM);
 
 				v = new Variable(variableName, 0, Variable::MEM_VAR);
+
+				if (variableExists(v, variables)) {
+					errorFound = true;
+					break;
+				}
+
 				v->setValue(stoi(variableValue));
 				variables.push_back(v);
 				break;
@@ -107,18 +115,40 @@ void SyntaxAnalysis::S()
 				eat(T_REG);
 
 				variableName = this->currentToken.getValue();
-				variables.push_back(new Variable(variableName, regPosition++, Variable::REG_VAR));
+
+				v = new Variable(variableName, regPosition++, Variable::REG_VAR);
+
+				if (variableExists(v, variables)) {
+					errorFound = true;
+					break;
+				}
+
+				variables.push_back(v);
 				eat(T_R_ID);
 				break;
 
 			case T_FUNC:
 				eat(T_FUNC);
-				labels.push_back(new Label(instructionPosition, this->currentToken.getValue()));
+				label = new Label(instructionPosition, this->currentToken.getValue());
+
+				if (labelExists(labels, label)) {
+					errorFound = true;
+					break;
+				}
+
+				labels.push_back(label);
 				eat(T_ID);
 				break;
 
 			case T_ID:
-				labels.push_back(new Label(instructionPosition, this->currentToken.getValue()));
+				label = new Label(instructionPosition, this->currentToken.getValue());
+
+				if (labelExists(labels, label)) {
+					errorFound = true;
+					break;
+				}
+
+				labels.push_back(label);
 				eat(T_ID);
 				eat(T_COL);
 				E();
@@ -403,6 +433,84 @@ void SyntaxAnalysis::E()
 
 			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_NOP, destination, source, "nop");
 			instructions.push_back(instruction);
+			destination.clear();
+			source.clear();
+			break;
+
+		// Added new instructions (3)
+		case T_ADDU:
+			eat(T_ADDU);
+
+			nameOfVariableOne = this->currentToken.getValue();
+			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			eat(T_COMMA);
+
+			nameOfVariableTwo = this->currentToken.getValue();
+			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			eat(T_COMMA);
+
+			nameOfVariableThree = this->currentToken.getValue();
+			source.push_back(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADDU, destination, source, "addu `d, `s, `s");
+			instructions.push_back(instruction);
+			destination.clear();
+			source.clear();
+			break;
+
+		case T_OR:
+			eat(T_OR);
+
+			nameOfVariableOne = this->currentToken.getValue();
+			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			eat(T_COMMA);
+
+			nameOfVariableTwo = this->currentToken.getValue();
+			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			eat(T_COMMA);
+
+			nameOfVariableThree = this->currentToken.getValue();
+			source.push_back(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_OR, destination, source, "or `d, `s, `s");
+			instructions.push_back(instruction);
+			destination.clear();
+			source.clear();
+			break;
+
+		case T_LB:
+			eat(T_LB);
+
+			nameOfVariableOne = this->currentToken.getValue();
+			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			eat(T_COMMA);
+
+			valueOfVariableOne = this->currentToken.getValue();
+			eat(T_NUM);
+
+			eat(T_L_PARENT);
+
+			nameOfVariableTwo = this->currentToken.getValue();
+			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			eat(T_R_ID);
+
+			eat(T_R_PARENT);
+
+			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LB, destination, source, "lb `d, `i(`s)");
+			instructions.push_back(instruction);
+			instruction->m_number = stoi(valueOfVariableOne);
 			destination.clear();
 			source.clear();
 			break;

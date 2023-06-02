@@ -11,7 +11,7 @@ bool inRemoved(std::vector<int> vec, int position) {
 
 SimplificationStack doSimplification(InterferenceGraph interferenceGraph, int degree) {
 	int maxPosition = -1;
-	int numberOfNeighbourss = -1;
+	int numberOfNeighbours = -1;
 	int size = interferenceGraph.getVariables().size();
 	int counter;
 	std::vector<int> removedPositions;
@@ -21,7 +21,7 @@ SimplificationStack doSimplification(InterferenceGraph interferenceGraph, int de
 	while (size > 0) 
 	{
 		maxPosition = -1;
-		numberOfNeighbourss = -1;
+		numberOfNeighbours = -1;
 		for (int i = 0; i < interferenceGraph.getMatrix().size(); i++) 
 		{
 			if (inRemoved(removedPositions, i))
@@ -36,9 +36,9 @@ SimplificationStack doSimplification(InterferenceGraph interferenceGraph, int de
 					counter++;
 			}
 
-			if (counter > numberOfNeighbourss && counter < degree)
+			if (counter > numberOfNeighbours && counter < degree)
 			{
-				numberOfNeighbourss = counter;
+				numberOfNeighbours = counter;
 				maxPosition = i;
 			}
 		}

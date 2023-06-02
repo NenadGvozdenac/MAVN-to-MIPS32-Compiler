@@ -211,6 +211,16 @@ std::string Instruction::getTypeToString()
 
 */
 
+bool labelExists(Labels labels, Label* label) {
+	for (auto& el : labels) {
+		if (el->getNameOfLabel() == label->getNameOfLabel()) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 Variable::VariableType& Variable::getVariableType() 
 {
 	return this->m_variableType;
