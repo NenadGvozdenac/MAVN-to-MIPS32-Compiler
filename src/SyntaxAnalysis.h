@@ -19,8 +19,14 @@ public:
 	*/
 	bool doSyntaxAnalysis();
 
+	/**
+	* Method which finds predecessors and successors
+	*/
 	void findPredAndSucc(Instructions& instructions);
 
+	/**
+	* Method which prints the instructions to console
+	*/
 	void printInstructions(Instructions instruc);
 
 private:
@@ -29,6 +35,7 @@ private:
 	* Reference to lexical analysis module
 	*/
 public:
+	// References to the variables, instructions and labels
 	Variables& variables;
 	Instructions& instructions;
 	Labels& labels;
@@ -37,7 +44,6 @@ public:
 	* Prints the error message, and token that caused the syntax error
 	*/
 	void printSyntaxError(Token token);
-
 
 	/**
 	* Prints the token info
@@ -78,11 +84,6 @@ public:
 	void E();
 
 	/**
-	 * Nonterminal R
-	 */
-	void R();
-
-	/**
 	* Reference to lexical analysis module
 	*/
 	LexicalAnalysis& lexicalAnalysis;
@@ -101,6 +102,8 @@ public:
 	* Current token that is being analyzed
 	*/
 	Token currentToken;
+
+	// Current reg position and instruction position
 	int regPosition = 0;
 	int instructionPosition = 0;
 };

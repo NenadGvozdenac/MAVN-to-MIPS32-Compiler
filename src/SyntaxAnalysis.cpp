@@ -6,7 +6,6 @@
 
 using namespace std;
 
-
 SyntaxAnalysis::SyntaxAnalysis(LexicalAnalysis& lex, Variables& vars, Instructions& ins, Labels& labs) :
 	lexicalAnalysis(lex), 
 	errorFound(false), 
@@ -16,7 +15,6 @@ SyntaxAnalysis::SyntaxAnalysis(LexicalAnalysis& lex, Variables& vars, Instructio
 	labels(labs) {
 }
 
-
 bool SyntaxAnalysis::doSyntaxAnalysis() 
 {
 	currentToken = getNextToken();
@@ -25,19 +23,16 @@ bool SyntaxAnalysis::doSyntaxAnalysis()
 	return !errorFound;
 }
 
-
 void SyntaxAnalysis::printSyntaxError(Token token)
 {
 	cout << "Syntax error! Token: " << token.getValue() << " unexpected" << endl;
 }
-
 
 void SyntaxAnalysis::printTokenInfo(Token token) 
 {
 	cout << setw(20) << left << token.tokenTypeToString(token.getType());
 	cout << setw(25) << right << token.getValue() << endl;
 }
-
 
 void SyntaxAnalysis::eat(TokenType t) 
 {
@@ -53,7 +48,6 @@ void SyntaxAnalysis::eat(TokenType t)
 	}
 }
 
-
 Token SyntaxAnalysis::getNextToken() 
 {
 	if (tokenIterator == lexicalAnalysis.getTokenList().end())
@@ -61,7 +55,7 @@ Token SyntaxAnalysis::getNextToken()
 	return *tokenIterator++;
 }
 
-// Q -> S ; L
+// Q → S ; L
 void SyntaxAnalysis::Q() 
 {
 	if (this->errorFound != true) {
@@ -76,11 +70,11 @@ void SyntaxAnalysis::Q()
 }
 
 /**
- * S -> _mem mid num
- * S -> _reg rid
- * S -> _func id
- * S -> id: E
- * S -> E
+  S → _mem mid num
+  S → _reg rid
+  S → _func id
+  S → id: E
+  S → E
  */
 void SyntaxAnalysis::S() 
 {
@@ -161,9 +155,9 @@ void SyntaxAnalysis::S()
 }
 
 /**
- * S -> _mem mid num
- * L -> eof
- * L -> Q
+ * S → _mem mid num
+ * L → eof
+ * L → Q
  */
 void SyntaxAnalysis::L() 
 {
@@ -180,19 +174,7 @@ void SyntaxAnalysis::L()
 	}
 }
 
-/**
-	E → add rid, rid, rid
-	E → addi rid, rid, num
-	E → sub rid, rid, rid
-	E → la rid, mid
-	E → lw rid, num(rid)
-	E → li rid, num
-	E → sw rid, num(rid)
-	E → b id
-	E → bltz rid, id
-	E → nop
- */
-
+// Check where the variable is
 int FindVariable(std::string s, Variables& variables) 
 {
 	for (Variable* it : variables) 
@@ -206,6 +188,18 @@ int FindVariable(std::string s, Variables& variables)
 	return -1;
 }
 
+/**
+	E → add rid, rid, rid
+	E → addi rid, rid, num
+	E → sub rid, rid, rid
+	E → la rid, mid
+	E → lw rid, num(rid)
+	E → li rid, num
+	E → sw rid, num(rid)
+	E → b id
+	E → bltz rid, id
+	E → nop
+*/
 void SyntaxAnalysis::E()
 {
 	if (errorFound == false) 
@@ -524,10 +518,9 @@ void SyntaxAnalysis::E()
 
 void SyntaxAnalysis::findPredAndSucc(Instructions& instructions) 
 {
-
 	for (Instruction* instruction : instructions) 
 	{
-		if (instruction->getType() == InstructionType::I_B) 
+		if (instruction->m_type == InstructionType::I_B)
 		{
 			for (Instruction* instruction2 : instructions) 
 			{
@@ -547,7 +540,7 @@ void SyntaxAnalysis::findPredAndSucc(Instructions& instructions)
 					instruction->m_succ.push_back(instruction2);
 					instruction2->m_pred.push_back(instruction);
 				}
-				else if (instruction->getType() == InstructionType::I_BLTZ) 
+				else if (instruction->m_type == InstructionType::I_BLTZ) 
 				{
 					if (instruction->m_label->getPosition() == instruction2->m_position)
 					{
@@ -629,9 +622,4 @@ void SyntaxAnalysis::printInstructions(Instructions instructions)
 		std::cout << "------------------------------------------------------------------------" << endl;
 		std::cout << std::endl << std::endl;
 	}
-}
-
-
-// Empty
-void SyntaxAnalysis::R() {
 }

@@ -4,6 +4,8 @@
 #include "Types.h"
 #include "IR.h"
 
+// Function used to do the liveness analysis on instructions
+// @param Instructions& instructions
 void doLivenessAnalysis(Instructions& instructions);
 
 #endif

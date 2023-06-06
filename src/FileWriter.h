@@ -1,22 +1,20 @@
 #pragma once
-
-#include "IR.h"
 #include <fstream>
 
+#include "IR.h"
 
+// Class used to represent the writer for writing into the .S file
 class FileWriter {
 private:
+	// Data
 	std::string fileName;
 	Instructions& instructions;
 	Variables& variables;
 	Labels& labels;
 public:
-	FileWriter(std::string fileName, Instructions& instructions, Variables& variables, Labels& labels) : 
-		fileName(fileName), 
-		instructions(instructions),
-		variables(variables),
-		labels(labels)
-	{}
+	// Constructor
+	FileWriter(std::string fileName, Instructions& instructions, Variables& variables, Labels& labels);
 
+	// Function used to write into the file (fileName), the instructions, variables and labels
 	void write();
 };

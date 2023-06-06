@@ -1,141 +1,12 @@
 #include "IR.h"
 
-/*
-std::string& Instruction::getLabelStr()
-{
-	return this->m_labelStr;
+std::string Label::getNameOfLabel() {
+	return this->name;
 }
 
-Label*& Instruction::getLabel()
-{
-	return this->m_label;
+int Label::getPosition() {
+	return this->position;
 }
-
-int& Instruction::getPosition()
-{
-	return this->m_position;
-}
-
-InstructionType& Instruction::getInstructionType()
-{
-	return this->m_type;
-}
-
-std::string& Instruction::getInstructionTemplate()
-{
-	return this->m_instructionTemplate;
-}
-
-int& Instruction::getNumber()
-{
-	return this->m_number;
-}
-
-Variables& Instruction::getSrc()
-{
-	return m_src;
-}
-
-Variables& Instruction::getDst()
-{
-	return m_dst;
-}
-
-Variables& Instruction::getUse()
-{
-	return m_src;
-}
-
-Variables& Instruction::getDef()
-{
-	return m_dst;
-}
-
-Variables& Instruction::getIn()
-{
-	return m_src;
-}
-
-Variables& Instruction::getOut()
-{
-	return m_dst;
-}
-
-std::list < Instruction* >& Instruction::getSucc() 
-{
-	return m_succ;
-}
-
-std::list < Instruction* >& Instruction::getPred()
-{
-	return m_pred;
-}
-
-void Instruction::setLabelStr(std::string labelStr)
-{
-	this->m_labelStr = labelStr;
-}
-
-void Instruction::setLabel(Label* label)
-{
-	this->m_label = label;
-}
-
-void Instruction::setPosition(int position)
-{
-	this->m_position = position;
-}
-
-void Instruction::setType(InstructionType instructionType)
-{
-	this->m_type = instructionType;
-}
-
-void Instruction::setNumber(int number)
-{
-	this->m_number = number;
-}
-
-void Instruction::setDst(Variables variables)
-{
-	this->m_dst = variables;
-}
-
-void Instruction::setSrc(Variables variables)
-{
-	this->m_src = variables;
-}
-
-void Instruction::setUse(Variables variables)
-{
-	this->m_use = variables;
-}
-
-void Instruction::setDef(Variables variables)
-{
-	this->m_def = variables;
-}
-
-void Instruction::setIn(Variables variables)
-{
-	this->m_in = variables;
-}
-
-void Instruction::setOut(Variables variables)
-{
-	this->m_out = variables;
-}
-
-void Instruction::setSucc(std::list<Instruction*> instructions)
-{
-	this->m_succ = instructions;
-}
-
-void Instruction::setPred(std::list<Instruction*> instructions)
-{
-	this->m_pred = instructions;
-}
-
 
 std::string Instruction::outputList(std::list<Instruction*> list)
 {
@@ -155,61 +26,22 @@ std::string Instruction::outputList(std::list<Instruction*> list)
 
 std::string Instruction::getTypeToString()
 {
-	if (m_type == InstructionType::I_ADD)
-	{
-		return "add";
-	}
-	else if (m_type == InstructionType::I_ADDI)
-	{
-		return "addi";
-	}
-	else if (m_type == InstructionType::I_B)
-	{
-		return "b";
-	}
-	else if (m_type == InstructionType::I_BLTZ)
-	{
-		return "bltz";
-	}
-	else if (m_type == InstructionType::I_LA)
-	{
-		return "la";
-	}
-	else if (m_type == InstructionType::I_LI)
-	{
-		return "li";
-	}
-	else if (m_type == InstructionType::I_LW)
-	{
-		return "lw";
-	}
-	else if (m_type == InstructionType::I_NOP)
-	{
-		return "nop";
-	}
-	else if (m_type == InstructionType::I_NOR)
-	{
-		return "nor";
-	}
-	else if (m_type == InstructionType::I_OR)
-	{
-		return "or";
-	}
-	else if (m_type == InstructionType::I_SLT)
-	{
-		return "slt";
-	}
-	else if (m_type == InstructionType::I_SUB)
-	{
-		return "sub";
-	}
-	else if (m_type == InstructionType::I_SW)
-	{
-		return "sw";
+	switch (m_type) {
+		case I_ADD:		return "add";
+		case I_ADDI:	return "addi";
+		case I_B:		return "b";
+		case I_BLTZ:	return "bltz";
+		case I_LA:		return "la";
+		case I_LI:		return "li";
+		case I_LW:		return "lw";
+		case I_NOP:		return "nop";
+		case I_SUB:		return "sub";
+		case I_SW:		return "sw";
+		case I_ADDU:	return "addu";
+		case I_OR:		return "or";
+		case I_LB:		return "lb";
 	}
 }
-
-*/
 
 bool labelExists(Labels labels, Label* label) {
 	for (auto& el : labels) {
@@ -305,13 +137,11 @@ void Instruction::normalizeAssignmentsToVariables(std::list<Instruction*>& instr
 	}
 }
 
-using std::cout;
-
 void printAll(Variables variables, Instructions instructions, Labels labels)
 {
 	for (auto it = variables.begin(); it != variables.end(); ++it) 
 	{
-		cout << "VARIABLE: \t" << (*it)->getName() << " -> " << (*it)->getVariableAssignment() << std::endl;
+		std::cout << "VARIABLE: \t" << (*it)->getName() << " -> " << (*it)->getVariableAssignment() << std::endl;
 	}
 
 	std::cout << "\n";
@@ -319,8 +149,8 @@ void printAll(Variables variables, Instructions instructions, Labels labels)
 	for (auto it = instructions.begin(); it != instructions.end(); it++) 
 	{
 		std::cout << "POSITION: " << (*it)->m_position;
-		cout << "\tINSTRUCTION: \t";
-		cout << (*it)->getTypeToString() << " ";
+		std::cout << "\tINSTRUCTION: \t";
+		std::cout << (*it)->getTypeToString() << " ";
 
 		for (Variable* el : (*it)->getDst()) 
 		{
@@ -338,9 +168,9 @@ void printAll(Variables variables, Instructions instructions, Labels labels)
 
 	for (auto it = labels.begin(); it != labels.end(); it++) 
 	{
-		cout << "LABEL: \t\t";
-		cout << (*it)->getNameOfLabel() << std::endl;
+		std::cout << "LABEL: \t\t";
+		std::cout << (*it)->getNameOfLabel() << std::endl;
 	}
 
-	cout << std::endl;
+	std::cout << std::endl;
 }

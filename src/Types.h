@@ -87,7 +87,7 @@ enum Regs
 	t1,
 	t2,
 	t3,
-	t4
+	t4		// Added another register, because multiply.S couldn't be done with 4 registers
 };
 
 #endif

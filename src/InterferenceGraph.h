@@ -2,32 +2,31 @@
 
 #include "IR.h"
 
+// InterferenceMatrix that consists of an array of an array of vectors (should be NxN matrix)
 typedef std::vector<std::vector<int>> InterferenceMatrix;
 
+// Class that is used to interact with the interference graph
 class InterferenceGraph {
 private:
-	Variables* m_variables;		
-	InterferenceMatrix m_matrix;	
+	// Data
+	Variables* m_variables;			// Variables stored in the graph
+	InterferenceMatrix m_matrix;	// Matrix stored in the graph
 
 public:
-	InterferenceGraph(Variables v, Instructions& inst) : m_variables(calculateRegisterVariables(v))
-	{
-		makeInterferenceGraph(inst);
-	}
+	// Constructor for the interference graph
+	InterferenceGraph(Variables v, Instructions& inst);
 
+	// Function that goes through all variables and checks whether they are registers or not
 	Variables* calculateRegisterVariables(Variables&);
 
-	void setMatrix(InterferenceMatrix* mat) { m_matrix = *mat; }
-
+	// Function that prints the interference matrix to the console
 	void printInterferenceMatrix();
 
-	InterferenceMatrix& getMatrix() { 
-		return m_matrix;
-	}
+	// Function that retrieves the matrix of this object
+	InterferenceMatrix& getMatrix();
 
-	Variables& getVariables() {
-		return *m_variables;
-	}
+	// Function that retrieves the variables of this object
+	Variables& getVariables();
 
 	void makeInterferenceGraph(Instructions& instructions);
 };

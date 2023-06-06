@@ -4,6 +4,13 @@
 #include <stack>
 #include "InterferenceGraph.h"
 
+// SimplificationStack defined as a stack of Variables*
 typedef std::stack<Variable*> SimplificationStack;
 
-SimplificationStack doSimplification(InterferenceGraph ig, int degree);
+// Function that does simplification on registers, potentionally spills
+// @param InterferenceGraph ig
+// @param int registerNumber
+// @return SimplificationStack
+SimplificationStack doSimplification(InterferenceGraph ig, int registerNumber);
+
+bool checkSpill(Variables variables, int size);

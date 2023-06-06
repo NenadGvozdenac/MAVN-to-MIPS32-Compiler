@@ -98,6 +98,27 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 
 		SimplificationStack simplificationStack;
 		simplificationStack = doSimplification(interferenceGraph, __REG_NUMBER__);
+
+		bool spillDetected = checkSpill(variables, simplificationStack.size());
+
+		if (spillDetected) {
+			cout << endl;
+			cout << "------------------------------------------------------------------------" << endl;
+			cout << "------------------------------------------------------------------------" << endl;
+			cout << "---------------- Simplification NOT FINISHED successfully --------------" << endl;
+			cout << "------------------------- Spill detected! ------------------------------" << endl;
+			cout << "------------------------------------------------------------------------" << endl << endl;
+			throw runtime_error("\nException! Simplification failed! Spill detected!\n");
+		}
+		else {
+			cout << endl;
+			cout << "------------------------------------------------------------------------" << endl;
+			cout << "------------------------------------------------------------------------" << endl;
+			cout << "------------------ Simplification finished successfully ----------------" << endl;
+			cout << "------------------------------------------------------------------------" << endl;
+			cout << "------------------------------------------------------------------------" << endl << endl;
+		}
+
 		bool resourceAllocationSuccessfull = doResourceAllocation(simplificationStack, interferenceGraph);
 
 		if (resourceAllocationSuccessfull) 
@@ -117,7 +138,7 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 			cout << "------------- Resource allocation NOT FINISHED successfuly  ------------" << endl;
 			cout << "------------------------------------------------------------------------" << endl;
 			cout << "------------------------------------------------------------------------" << endl << endl;
-			throw new runtime_error("\nException! Resource allocation failed!\n");
+			throw runtime_error("\nException! Resource allocation failed!\n");
 		}
 
 		cout << endl;
@@ -130,14 +151,14 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 		Instruction::normalizeAssignmentsToVariables(instructions, variables);
 		syntaxAnalysis.printInstructions(syntaxAnalysis.instructions);
 
-		FileWriter* writerSimple = new FileWriter(outputFile, syntaxAnalysis.instructions, syntaxAnalysis.variables, syntaxAnalysis.labels);
+		FileWriter* writer = new FileWriter(outputFile, syntaxAnalysis.instructions, syntaxAnalysis.variables, syntaxAnalysis.labels);
 
 		cout << "------------------------------------------------------------------------" << endl;
 		cout << "------------------------------------------------------------------------" << endl;
 		cout << "----------------- Complete overview of the simple code -----------------" << endl;
 		cout << "------------------------------------------------------------------------" << endl;
 		cout << "------------------------------------------------------------------------" << endl;
-		writerSimple->write();
+		writer->write();
 
 		cout << endl;
 		cout << "------------------------------------------------------------------------" << endl;
@@ -146,7 +167,7 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 		cout << "------------------------------- NenadG ---------------------------------" << endl;
 		cout << "------------------------------------------------------------------------" << endl;
 
-		delete(writerSimple);
+		delete(writer);
 	}
 	catch (runtime_error e)
 	{

@@ -1,8 +1,22 @@
 #include "InterferenceGraph.h"
 
+InterferenceGraph::InterferenceGraph(Variables v, Instructions& inst) : m_variables(calculateRegisterVariables(v))
+{
+	makeInterferenceGraph(inst);
+}
+
+InterferenceMatrix& InterferenceGraph::getMatrix() 
+{
+	return m_matrix;
+}
+
+Variables& InterferenceGraph::getVariables() 
+{
+	return *m_variables;
+}
+
 Variables* InterferenceGraph::calculateRegisterVariables(Variables& v) 
 {
-
 	Variables* vars = new Variables();
 	int position = 0;
 

@@ -11,6 +11,7 @@
 class Variable
 {
 public:
+	// Variable type used
 	enum VariableType
 	{
 		MEM_VAR,
@@ -18,6 +19,7 @@ public:
 		NO_TYPE
 	};
 
+	// Constructors
 	Variable() : 
 		m_variableType(VariableType::NO_TYPE), 
 		m_variableName(""),
@@ -31,24 +33,34 @@ public:
 		m_variableAssignment(Regs::NO_ASSIGN) {
 	}
 
+	// Function that retrieves the variable type of this object
 	VariableType& Variable::getVariableType();
-
+	
+	// Function that retrieves the name of the variable
 	std::string& Variable::getName();
 
+	// Function that retrieves the position of the variable
 	int& Variable::getPosition();
 
+	// Function that retrieves the register of this variable (if it is of type REG_VAR)
 	Regs& Variable::getVariableAssignment();
 
+	// Function that retrieves the value of this variable (if it is of type MEM_REG)
 	int& Variable::getValue();
 
+	// Function that sets the variable type of this object
 	void Variable::setVariableType(VariableType type);
 
+	// Function that sets the variable name of this object
 	void Variable::setName(std::string name);
 
+	// Function that sets the variable position of this object
 	void Variable::setPosition(int position);
 
+	// Function that sets the variable assignment of this object
 	void Variable::setVariableAssignment(Regs regs);
 
+	// Function that sets the variable value of this object
 	void Variable::setValue(int value);
 
 private:
@@ -65,7 +77,7 @@ private:
 typedef std::list<Variable*> Variables;
 
 /**
- * This class represents one instruction in program code.
+ * This class represents one label in program code.
  */
 class Label { 
 private:
@@ -75,15 +87,11 @@ public:
 	Label() : name("") {}
 	Label(int position, std::string name) : name(name), position(position) {}
 
-	std::string getNameOfLabel() 
-	{
-		return name;
-	}
+	// Function that retrieves the name
+	std::string getNameOfLabel();
 
-	int getPosition() 
-	{
-		return position;
-	}
+	// Function that retrieves a position
+	int getPosition();
 };
 
 typedef std::list<Label*> Labels;
@@ -94,6 +102,7 @@ typedef std::list<Label*> Labels;
 class Instruction
 {
 public:
+	// Constructors
 	Instruction () : m_position(0), m_type(I_NO_TYPE) {}
 	Instruction (std::string label, int pos, InstructionType type, Variables& dst, Variables& src, std::string instructionTemplate) :
 		m_labelStr(label),  
@@ -106,97 +115,28 @@ public:
 		m_instructionTemplate(instructionTemplate)
 	{}
 
+	// Function that retrieves the source registers
 	Variables getSrc() 
 	{
 		return m_src;
 	}
-
+	
+	// Function that retrieves the destination registers
 	Variables getDst() 
 	{
 		return m_dst;
 	}
 
-	static std::string outputList(std::list<Instruction*> list) 
-	{
-		std::string str("");
+	// Function that outputs a list to console
+	static std::string outputList(std::list<Instruction*> list);
 
-		for (Instruction* el : list) 
-		{
-			Variables vb = el->getSrc();
-			for (Variable* v : vb) 
-			{
-				str += std::to_string(v->getPosition()) + " ";
-			}
-		}
+	// Function that retrieves the type of the instruction, in string format
+	std::string getTypeToString();
 
-		return str;
-	}
-
-	InstructionType getType() 
-	{
-		return this->m_type;
-	}
-
-	std::string getTypeToString() 
-	{
-		if (m_type == InstructionType::I_ADD) 
-		{
-			return "add";
-		}
-		else if (m_type == InstructionType::I_ADDI) 
-		{
-			return "addi";
-		}
-		else if (m_type == InstructionType::I_B) 
-		{
-			return "b";
-		}
-		else if (m_type == InstructionType::I_BLTZ) 
-		{
-			return "bltz";
-		}
-		else if (m_type == InstructionType::I_LA) 
-		{
-			return "la";
-		}
-		else if (m_type == InstructionType::I_LI) 
-		{
-			return "li";
-		}
-		else if (m_type == InstructionType::I_LW) 
-		{
-			return "lw";
-		}
-		else if (m_type == InstructionType::I_NOP) 
-		{
-			return "nop";
-		}
-		else if (m_type == InstructionType::I_OR) 
-		{
-			return "or";
-		}
-		else if (m_type == InstructionType::I_SUB) 
-		{
-			return "sub";
-		}
-		else if (m_type == InstructionType::I_SW) 
-		{
-			return "sw";
-		}
-		else if (m_type == InstructionType::I_ADDU) {
-			return "addu";
-		}
-		else if (m_type == InstructionType::I_OR) {
-			return "or";
-		}
-		else if (m_type == InstructionType::I_LB) {
-			return "lb";
-		}
-	}
-
+	// Function that maps variables into instruction's variables
 	static void normalizeAssignmentsToVariables(std::list<Instruction*>& instructions, Variables variables);
 
-public:
+	// Data
 	std::string m_labelStr;
 	Label* m_label;
 	int m_position;
@@ -229,8 +169,20 @@ typedef std::list<Instruction*> Instructions;
  */
 bool variableExists(Variable* variable, Variables variables);
 
+/**
+ * Use this function to print all variables, instructions and labels to console.
+ * @param variables
+ * @param variables instructions
+ * @param variables labels
+ */
 void printAll(Variables variables, Instructions instructions, Labels labels);
 
+/**
+ * Use this function to check whether a label exists in labels
+ * @param labels
+ * @param label
+ * @return boolean: exists
+ */
 bool labelExists(Labels labels, Label* label);
 
 #endif

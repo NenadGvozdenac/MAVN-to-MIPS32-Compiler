@@ -12,24 +12,20 @@ TokenType Token::getType()
 	return tokenType;
 }
 
-
 void Token::setType(TokenType t)
 {
 	tokenType = t;
 }
-
 
 string Token::getValue()
 {
 	return value;
 }
 
-
 void Token::setValue(string s)
 {
 	value = s;
 }
-
 
 void Token::makeToken(int begin, int end, std::vector<char>& programBuffer,  int lastFiniteState)
 {
