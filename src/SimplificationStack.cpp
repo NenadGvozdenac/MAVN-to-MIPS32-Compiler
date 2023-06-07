@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #include "SimplificationStack.h"
 
 // Function that checks whether the register has the same position as the one in the register

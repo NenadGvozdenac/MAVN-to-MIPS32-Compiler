@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #ifndef __FINITE_STATE_MACHINE__
 #define __FINITE_STATE_MACHINE__
 

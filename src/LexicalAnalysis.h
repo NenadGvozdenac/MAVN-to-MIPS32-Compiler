@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #ifndef __LEXICAL_ANALYSIS__
 #define __LEXICAL_ANALYSIS__
 

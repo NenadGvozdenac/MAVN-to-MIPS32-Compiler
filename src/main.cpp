@@ -1,4 +1,6 @@
-﻿#include "LexicalAnalysis.h"
+﻿// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
+#include "LexicalAnalysis.h"
 #include "SyntaxAnalysis.h"
 #include "LivenessAnalysis.h"
 #include "IR.h"

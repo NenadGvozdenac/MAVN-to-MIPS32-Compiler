@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #ifndef __TYPES__
 #define __TYPES__
 

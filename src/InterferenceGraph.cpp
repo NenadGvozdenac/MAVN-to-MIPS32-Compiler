@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #include "InterferenceGraph.h"
 
 InterferenceGraph::InterferenceGraph(Variables v, Instructions& inst) : m_variables(calculateRegisterVariables(v))

@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #include "FileWriter.h"
 #include <sstream>
 #include <exception>

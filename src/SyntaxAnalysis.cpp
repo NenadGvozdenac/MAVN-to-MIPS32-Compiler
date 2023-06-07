@@ -1,4 +1,6 @@
-﻿#include <iostream>
+﻿// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
+#include <iostream>
 #include <iomanip>
 
 #include "SyntaxAnalysis.h"

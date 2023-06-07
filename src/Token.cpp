@@ -1,3 +1,5 @@
+// Autor: Nenad Gvozdenac, Datum: 07.06.2023
+
 #include <iostream>
 #include <iomanip>
 
@@ -5,7 +7,6 @@
 #include "FiniteStateMachine.h"
 
 using namespace std;
-
 
 TokenType Token::getType()
 {
