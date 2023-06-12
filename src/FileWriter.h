@@ -17,6 +17,8 @@ public:
 	// Constructor
 	FileWriter(std::string fileName, Instructions& instructions, Variables& variables, Labels& labels);
 
+	~FileWriter();
+
 	// Function used to write into the file (fileName), the instructions, variables and labels
 	void write();
 };

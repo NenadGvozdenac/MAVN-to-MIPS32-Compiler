@@ -5,9 +5,9 @@
 
 using std::list;
 
-bool variableExists(Variable* variable, Variables variables)
+bool variableExists(std::shared_ptr<Variable> variable, std::list<std::shared_ptr<Variable>> variables)
 {
-	Variables::iterator v_it;
+	std::list<std::shared_ptr<Variable>>::iterator v_it;
 
 	for (v_it = variables.begin(); v_it != variables.end(); v_it++)
 	{
@@ -26,11 +26,11 @@ bool variableExists(Variable* variable, Variables variables)
 void doLivenessAnalysis(Instructions& instructions)
 {
 
-	const auto funcEquals = ([](Variable* A, Variable* B) -> bool {
+	const auto funcEquals = ([](std::shared_ptr<Variable> A, std::shared_ptr<Variable> B) -> bool {
 		return A->getName() == B->getName();
 	});
 
-	const auto funcSort = [](Variable* A, Variable* B) -> bool {return A->getName() < B->getName(); };
+	const auto funcSort = [](std::shared_ptr<Variable> A, std::shared_ptr<Variable> B) -> bool {return A->getName() < B->getName(); };
 
 	bool provera = true;
 

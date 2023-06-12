@@ -1,18 +1,15 @@
 ﻿  FileWriter.cpp
-  FiniteStateMachine.cpp
-  IR.cpp
   InterferenceGraph.cpp
 C:\Users\matri\Desktop\OPPISA PROJEKAT\src\InterferenceGraph.cpp(71,20): warning C4018: '<': signed/unsigned mismatch
 C:\Users\matri\Desktop\OPPISA PROJEKAT\src\InterferenceGraph.cpp(98,20): warning C4018: '<': signed/unsigned mismatch
-  LexicalAnalysis.cpp
+  IR.cpp
   LivenessAnalysis.cpp
+  main.cpp
   ResourceAllocation.cpp
   SimplificationStack.cpp
 C:\Users\matri\Desktop\OPPISA PROJEKAT\src\SimplificationStack.cpp(35,21): warning C4018: '<': signed/unsigned mismatch
 C:\Users\matri\Desktop\OPPISA PROJEKAT\src\SimplificationStack.cpp(43,22): warning C4018: '<': signed/unsigned mismatch
   SyntaxAnalysis.cpp
-  Token.cpp
-  main.cpp
   Generating Code...
-C:\Users\matri\Desktop\OPPISA PROJEKAT\src\IR.cpp(46): warning C4715: 'Instruction::getTypeToString': not all control paths return a value
+C:\Users\matri\Desktop\OPPISA PROJEKAT\src\IR.cpp(73): warning C4715: 'Instruction::getTypeToString': not all control paths return a value
   LexicalAnalysis.vcxproj -> C:\Users\matri\Desktop\OPPISA PROJEKAT\src\Debug\LexicalAnalysis.exe

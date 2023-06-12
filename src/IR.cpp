@@ -2,22 +2,49 @@
 
 #include "IR.h"
 
-std::string Label::getNameOfLabel() {
+Variables Instruction::getSrc()
+{
+	return m_src;
+}
+
+Variables Instruction::getDst()
+{
+	return m_dst;
+}
+
+Instruction::~Instruction() 
+{
+	std::cout << "Deleting instruction from heap memory!" << std::endl;
+}
+
+Variable::~Variable() 
+{
+	std::cout << "Deleting variable from heap memory!" << std::endl;
+}
+
+Label::~Label() 
+{
+	std::cout << "Deleting label from heap memory!" << std::endl;
+}
+
+std::string Label::getNameOfLabel() 
+{
 	return this->name;
 }
 
-int Label::getPosition() {
+int Label::getPosition() 
+{
 	return this->position;
 }
 
-std::string Instruction::outputList(std::list<Instruction*> list)
+std::string Instruction::outputList(std::list<std::shared_ptr<Instruction>> list)
 {
 	std::string str("");
 
-	for (Instruction* el : list)
+	for (std::shared_ptr<Instruction> el : list)
 	{
 		Variables vb = el->getSrc();
-		for (Variable* v : vb)
+		for (std::shared_ptr<Variable> v : vb)
 		{
 			str += std::to_string(v->getPosition()) + " ";
 		}
@@ -45,7 +72,7 @@ std::string Instruction::getTypeToString()
 	}
 }
 
-bool labelExists(Labels labels, Label* label) {
+bool labelExists(Labels labels, std::shared_ptr<Label> label) {
 	for (auto& el : labels) {
 		if (el->getNameOfLabel() == label->getNameOfLabel()) {
 			return true;
@@ -105,7 +132,7 @@ void Variable::setValue(int value)
 	this->m_value = value;
 }
 
-void Instruction::normalizeAssignmentsToVariables(std::list<Instruction*>& instructions, Variables variables) 
+void Instruction::normalizeAssignmentsToVariables(std::list<std::shared_ptr<Instruction>>& instructions, Variables variables) 
 {
 	for (auto it = instructions.begin(); it != instructions.end(); it++) 
 	{
@@ -154,12 +181,12 @@ void printAll(Variables variables, Instructions instructions, Labels labels)
 		std::cout << "\tINSTRUCTION: \t";
 		std::cout << (*it)->getTypeToString() << " ";
 
-		for (Variable* el : (*it)->getDst()) 
+		for (std::shared_ptr<Variable> el : (*it)->getDst())
 		{
 			std::cout << el->getName() << " ";
 		}
 
-		for (Variable* el : (*it)->getSrc()) 
+		for (std::shared_ptr<Variable> el : (*it)->getSrc())
 		{
 			std::cout << el->getName() << " ";
 		}

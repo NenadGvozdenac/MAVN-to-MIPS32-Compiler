@@ -83,8 +83,8 @@ void SyntaxAnalysis::S()
 	if (errorFound == false) {
 		string variableName;
 		string variableValue;
-		Label* label;
-		Variable* v;
+		std::shared_ptr<Label> label;
+		std::shared_ptr<Variable> v;
 		
 		switch (this->currentToken.getType()) 
 		{
@@ -97,7 +97,7 @@ void SyntaxAnalysis::S()
 				variableValue = this->currentToken.getValue();
 				eat(T_NUM);
 
-				v = new Variable(variableName, 0, Variable::MEM_VAR);
+				v = std::shared_ptr<Variable>(new Variable(variableName, 0, Variable::MEM_VAR));
 
 				if (variableExists(v, variables)) {
 					errorFound = true;
@@ -105,27 +105,27 @@ void SyntaxAnalysis::S()
 				}
 
 				v->setValue(stoi(variableValue));
-				variables.push_back(v);
+				variables.push_back(std::shared_ptr<Variable>(v));
 				break;
 			case T_REG:
 				eat(T_REG);
 
 				variableName = this->currentToken.getValue();
 
-				v = new Variable(variableName, regPosition++, Variable::REG_VAR);
+				v = std::shared_ptr<Variable>(new Variable(variableName, regPosition++, Variable::REG_VAR));
 
 				if (variableExists(v, variables)) {
 					errorFound = true;
 					break;
 				}
 
-				variables.push_back(v);
+				variables.push_back(std::shared_ptr<Variable>(v));
 				eat(T_R_ID);
 				break;
 
 			case T_FUNC:
 				eat(T_FUNC);
-				label = new Label(instructionPosition, this->currentToken.getValue());
+				label = shared_ptr<Label>(new Label(instructionPosition, this->currentToken.getValue()));
 
 				if (labelExists(labels, label)) {
 					errorFound = true;
@@ -137,7 +137,7 @@ void SyntaxAnalysis::S()
 				break;
 
 			case T_ID:
-				label = new Label(instructionPosition, this->currentToken.getValue());
+				label = shared_ptr<Label>(new Label(instructionPosition, this->currentToken.getValue()));
 
 				if (labelExists(labels, label)) {
 					errorFound = true;
@@ -179,7 +179,7 @@ void SyntaxAnalysis::L()
 // Check where the variable is
 int FindVariable(std::string s, Variables& variables) 
 {
-	for (Variable* it : variables) 
+	for (std::shared_ptr<Variable> it : variables)
 	{
 		if (it->getName() == s) 
 		{
@@ -209,7 +209,7 @@ void SyntaxAnalysis::E()
 		string nameOfVariableOne, nameOfVariableTwo, nameOfVariableThree;
 		string valueOfVariableOne, valueOfVariableTwo;
 		Variables destination, source;
-		Instruction* instruction;
+		shared_ptr<Instruction> instruction;
 
 		switch (this->currentToken.getType()) 
 		{
@@ -217,22 +217,22 @@ void SyntaxAnalysis::E()
 			eat(T_ADD);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableThree = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADD, destination, source, "add `d, `s, `s");
+			instruction = shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADD, destination, source, "add `d, `s, `s"));
 			instructions.push_back(instruction);
 			destination.clear();
 			source.clear();
@@ -242,13 +242,13 @@ void SyntaxAnalysis::E()
 			eat(T_ADDI);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
@@ -256,7 +256,7 @@ void SyntaxAnalysis::E()
 			valueOfVariableOne = this->currentToken.getValue();
 			eat(T_NUM);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADDI, destination, source, "addi `d, `s, `i");
+			instruction = shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADDI, destination, source, "addi `d, `s, `i"));
 			instruction->m_number = stoi(valueOfVariableOne);
 			instructions.push_back(instruction);
 			destination.clear();
@@ -267,22 +267,22 @@ void SyntaxAnalysis::E()
 			eat(T_SUB);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableThree = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_SUB, destination, source, "sub `d, `s, `s");
+			instruction = shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_SUB, destination, source, "sub `d, `s, `s"));
 			instructions.push_back(instruction);
 			destination.clear();
 			source.clear();
@@ -292,16 +292,16 @@ void SyntaxAnalysis::E()
 			eat(T_LA);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::MEM_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::MEM_VAR)));
 			eat(T_M_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LA, destination, source, "la `d, `s");
+			instruction = shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LA, destination, source, "la `d, `s"));
 			instructions.push_back(instruction);
 			destination.clear();
 			source.clear();
@@ -311,7 +311,7 @@ void SyntaxAnalysis::E()
 			eat(T_LW);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
@@ -322,12 +322,12 @@ void SyntaxAnalysis::E()
 			eat(T_L_PARENT);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_R_PARENT);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LW, destination, source, "lw `d, `i(`s)");
+			instruction = shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LW, destination, source, "lw `d, `i(`s)"));
 			instructions.push_back(instruction);
 			instruction->m_number = stoi(valueOfVariableOne);
 			destination.clear();
@@ -338,7 +338,7 @@ void SyntaxAnalysis::E()
 			eat(T_LI);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
@@ -346,7 +346,7 @@ void SyntaxAnalysis::E()
 			valueOfVariableOne = this->currentToken.getValue();
 			eat(T_NUM);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LI, destination, source, "li `d, `i");
+			instruction = shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LI, destination, source, "li `d, `i"));
 			instructions.push_back(instruction);
 			instruction->m_number = stoi(valueOfVariableOne);
 			destination.clear();
@@ -357,7 +357,7 @@ void SyntaxAnalysis::E()
 			eat(T_SW);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
@@ -368,12 +368,12 @@ void SyntaxAnalysis::E()
 			eat(T_L_PARENT);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_R_PARENT);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_SW, destination, source, "sw `s, `i(`s)");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_SW, destination, source, "sw `s, `i(`s)"));
 			instructions.push_back(instruction);
 			instruction->m_number = stoi(valueOfVariableOne);
 			destination.clear();
@@ -386,7 +386,7 @@ void SyntaxAnalysis::E()
 			nameOfVariableOne = this->currentToken.getValue();
 			eat(T_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_B, destination, source, "b `n");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_B, destination, source, "b `n"));
 
 			for (auto el = labels.begin(); el != labels.end(); el++) {
 				if (nameOfVariableTwo == (*el)->getNameOfLabel()) {
@@ -403,7 +403,7 @@ void SyntaxAnalysis::E()
 			eat(T_BLTZ);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
@@ -411,7 +411,7 @@ void SyntaxAnalysis::E()
 			nameOfVariableTwo = this->currentToken.getValue();
 			eat(T_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_BLTZ, destination, source, "bltz `s, `n");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_BLTZ, destination, source, "bltz `s, `n"));
 
 			for (auto el = labels.begin(); el != labels.end(); el++) {
 				if (nameOfVariableTwo == (*el)->getNameOfLabel()) {
@@ -427,7 +427,7 @@ void SyntaxAnalysis::E()
 		case T_NOP:
 			eat(T_NOP);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_NOP, destination, source, "nop");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_NOP, destination, source, "nop"));
 			instructions.push_back(instruction);
 			destination.clear();
 			source.clear();
@@ -438,22 +438,22 @@ void SyntaxAnalysis::E()
 			eat(T_ADDU);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableThree = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADDU, destination, source, "addu `d, `s, `s");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_ADDU, destination, source, "addu `d, `s, `s"));
 			instructions.push_back(instruction);
 			destination.clear();
 			source.clear();
@@ -463,22 +463,22 @@ void SyntaxAnalysis::E()
 			eat(T_OR);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
 
 			nameOfVariableThree = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableThree, FindVariable(nameOfVariableThree, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_OR, destination, source, "or `d, `s, `s");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_OR, destination, source, "or `d, `s, `s"));
 			instructions.push_back(instruction);
 			destination.clear();
 			source.clear();
@@ -488,7 +488,7 @@ void SyntaxAnalysis::E()
 			eat(T_LB);
 
 			nameOfVariableOne = this->currentToken.getValue();
-			destination.push_back(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR));
+			destination.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableOne, FindVariable(nameOfVariableOne, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_COMMA);
@@ -499,12 +499,12 @@ void SyntaxAnalysis::E()
 			eat(T_L_PARENT);
 
 			nameOfVariableTwo = this->currentToken.getValue();
-			source.push_back(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR));
+			source.push_back(std::shared_ptr<Variable>(new Variable(nameOfVariableTwo, FindVariable(nameOfVariableTwo, variables), Variable::REG_VAR)));
 			eat(T_R_ID);
 
 			eat(T_R_PARENT);
 
-			instruction = new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LB, destination, source, "lb `d, `i(`s)");
+			instruction = std::shared_ptr<Instruction>(new Instruction((*labels.rbegin())->getNameOfLabel(), instructionPosition++, I_LB, destination, source, "lb `d, `i(`s)"));
 			instructions.push_back(instruction);
 			instruction->m_number = stoi(valueOfVariableOne);
 			destination.clear();
@@ -520,11 +520,11 @@ void SyntaxAnalysis::E()
 
 void SyntaxAnalysis::findPredAndSucc(Instructions& instructions) 
 {
-	for (Instruction* instruction : instructions) 
+	for (shared_ptr<Instruction> instruction : instructions) 
 	{
 		if (instruction->m_type == InstructionType::I_B)
 		{
-			for (Instruction* instruction2 : instructions) 
+			for (shared_ptr<Instruction> instruction2 : instructions)
 			{
 				if (instruction2->m_position == instruction->m_label->getPosition())
 				{
@@ -535,7 +535,7 @@ void SyntaxAnalysis::findPredAndSucc(Instructions& instructions)
 		}
 		else 
 		{
-			for (Instruction* instruction2 : instructions) 
+			for (shared_ptr<Instruction> instruction2 : instructions)
 			{
 				if (instruction->m_position + 1 == instruction2->m_position) 
 				{

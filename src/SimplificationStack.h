@@ -7,7 +7,7 @@
 #include "InterferenceGraph.h"
 
 // SimplificationStack defined as a stack of Variables*
-typedef std::stack<Variable*> SimplificationStack;
+typedef std::stack<std::shared_ptr<Variable>> SimplificationStack;
 
 // Function that does simplification on registers, potentionally spills
 // @param InterferenceGraph ig

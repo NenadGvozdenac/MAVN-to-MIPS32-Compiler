@@ -4,6 +4,11 @@
 #include <sstream>
 #include <exception>
 
+FileWriter::~FileWriter() 
+{
+	std::cout << "Deleting file writer from heap memory!" << std::endl;
+}
+
 FileWriter::FileWriter(std::string fileName, Instructions& instructions, Variables& variables, Labels& labels) :
 	fileName(fileName),
 	instructions(instructions),
@@ -27,7 +32,7 @@ void FileWriter::write()
 		ss << ".globl " << (*(labels.begin()))->getNameOfLabel() << "\n\n";			// We add the entry point into the program (first label)
 		ss << ".data\n";															// Add data section
 
-		for (Variable* variable : variables) 
+		for (std::shared_ptr<Variable> variable : variables)
 		{																			// We add all the memory variables into the memory section (under .data)
 			if (variable->getVariableType() == Variable::MEM_VAR)
 				ss << variable->getName() << ":\t.word " << variable->getValue() << "\n";
@@ -35,9 +40,9 @@ void FileWriter::write()
 
 		ss << "\n.text\n";															// Add text section
 
-		for (Instruction* instruction : instructions)
+		for (std::shared_ptr<Instruction> instruction : instructions)
 		{
-			for (Label* label : labels)
+			for (std::shared_ptr<Label> label : labels)
 			{
 				if (label->getPosition() == instruction->m_position)				// First output the label name. It should have the same position as the instruction position
 				{

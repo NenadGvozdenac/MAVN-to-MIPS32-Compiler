@@ -16,12 +16,12 @@ bool doResourceAllocation(SimplificationStack& simplificationStack, Interference
 		regs.push_back(t3);
 		regs.push_back(t4);
 
-		Variable* var = simplificationStack.top();	// Get the top variable, and remove it [pop it]
+		std::shared_ptr<Variable> var = simplificationStack.top();	// Get the top variable, and remove it [pop it]
 		simplificationStack.pop();
 
 		if (!colored.empty())
 		{
-			for (Variable* a : colored)
+			for (std::shared_ptr<Variable>a : colored)
 			{
 				if (interferenceGraph.getMatrix()[var->getPosition()][a->getPosition()] == __INTERFERENCE__)
 				{
@@ -35,7 +35,7 @@ bool doResourceAllocation(SimplificationStack& simplificationStack, Interference
 		if (!regs.empty())										// Should never be empty, and should push it into variables
 		{
 			var->setVariableAssignment(regs.front());
-			colored.push_back(var);
+			colored.push_back(std::shared_ptr<Variable>(var));
 		}
 		else {
 			return false;										// This means that spill was detected

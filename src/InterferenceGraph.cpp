@@ -43,11 +43,11 @@ void InterferenceGraph::makeInterferenceGraph(Instructions& instructions)
 		iterator->resize(this->getVariables().size(), __EMPTY__);
 	}
 
-	for (Instruction* instruction : instructions) 
+	for (std::shared_ptr<Instruction> instruction : instructions)
 	{
-		for (Variable* variableA : instruction->m_def) 
+		for (std::shared_ptr<Variable> variableA : instruction->m_def)
 		{
-			for (Variable* variableB : instruction->m_out) 
+			for (std::shared_ptr<Variable> variableB : instruction->m_out)
 			{
 				if (variableA->getPosition() != variableB->getPosition() && 
 					variableA->getVariableType() != Variable::MEM_VAR && 

@@ -58,7 +58,7 @@ SimplificationStack doSimplification(InterferenceGraph interferenceGraph, int re
 			if ((*it)->getPosition() == maxPosition) 
 			{
 				std::cout << (*it)->getName() << " " << (*it)->getPosition() << std::endl;
-				ss.push(*it);
+				ss.push(std::shared_ptr<Variable>(*it));
 			}
 		}
 		removedPositions.push_back(maxPosition);								// Push into removed positions the new maxPosition

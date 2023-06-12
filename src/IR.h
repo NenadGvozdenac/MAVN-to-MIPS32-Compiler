@@ -26,14 +26,18 @@ public:
 		m_variableType(VariableType::NO_TYPE), 
 		m_variableName(""),
 		m_variablePosition(-1),
-		m_variableAssignment(Regs::NO_ASSIGN) {}
+		m_variableAssignment(Regs::NO_ASSIGN),
+		m_value(0) {}
 	
 	Variable(std::string name, int pos, VariableType variableType) : 
 		m_variableName(name),
 		m_variablePosition(pos),
 		m_variableType(variableType),
-		m_variableAssignment(Regs::NO_ASSIGN) {
-	}
+		m_variableAssignment(Regs::NO_ASSIGN),
+		m_value(0) {}
+
+	// Destructor
+	~Variable();
 
 	// Function that retrieves the variable type of this object
 	VariableType& Variable::getVariableType();
@@ -76,7 +80,7 @@ private:
 /**
  * This type represents list of variables from program code.
  */
-typedef std::list<Variable*> Variables;
+typedef std::list<std::shared_ptr<Variable>> Variables;
 
 /**
  * This class represents one label in program code.
@@ -86,8 +90,10 @@ private:
 	std::string name;
 	int position;
 public:
-	Label() : name("") {}
 	Label(int position, std::string name) : name(name), position(position) {}
+
+	// Destructor
+	~Label();
 
 	// Function that retrieves the name
 	std::string getNameOfLabel();
@@ -96,7 +102,7 @@ public:
 	int getPosition();
 };
 
-typedef std::list<Label*> Labels;
+typedef std::list<std::shared_ptr<Label>> Labels;
 
 /**
  * This class represents one instruction in program code.
@@ -105,7 +111,7 @@ class Instruction
 {
 public:
 	// Constructors
-	Instruction () : m_position(0), m_type(I_NO_TYPE) {}
+	Instruction () : m_position(0), m_type(I_NO_TYPE), m_number(0) {}
 	Instruction (std::string label, int pos, InstructionType type, Variables& dst, Variables& src, std::string instructionTemplate) :
 		m_labelStr(label),  
 		m_position(pos), 
@@ -114,33 +120,31 @@ public:
 		m_src(src),
 		m_def(dst),
 		m_use(src),
-		m_instructionTemplate(instructionTemplate)
+		m_instructionTemplate(instructionTemplate),
+		m_number(0)
 	{}
 
+	// Destructor
+	~Instruction();
+
 	// Function that retrieves the source registers
-	Variables getSrc() 
-	{
-		return m_src;
-	}
+	Variables getSrc();
 	
 	// Function that retrieves the destination registers
-	Variables getDst() 
-	{
-		return m_dst;
-	}
+	Variables getDst();
 
 	// Function that outputs a list to console
-	static std::string outputList(std::list<Instruction*> list);
+	static std::string outputList(std::list<std::shared_ptr<Instruction>> list);
 
 	// Function that retrieves the type of the instruction, in string format
 	std::string getTypeToString();
 
 	// Function that maps variables into instruction's variables
-	static void normalizeAssignmentsToVariables(std::list<Instruction*>& instructions, Variables variables);
+	static void normalizeAssignmentsToVariables(std::list<std::shared_ptr<Instruction>>& instructions, Variables variables);
 
 	// Data
 	std::string m_labelStr;
-	Label* m_label;
+	std::shared_ptr<Label> m_label;
 	int m_position;
 	InstructionType m_type;
 	std::string m_instructionTemplate;
@@ -153,15 +157,15 @@ public:
 	Variables m_def;
 	Variables m_in;
 	Variables m_out;
-	std::list<Instruction*> m_succ;
-	std::list<Instruction*> m_pred;
+	std::list<std::shared_ptr<Instruction>> m_succ;
+	std::list<std::shared_ptr<Instruction>> m_pred;
 };
 
 
 /**
  * This type represents list of instructions from program code.
  */
-typedef std::list<Instruction*> Instructions;
+typedef std::list<std::shared_ptr<Instruction>> Instructions;
 
 /**
  * Use this function to check if variable exists in variables list.
@@ -169,7 +173,7 @@ typedef std::list<Instruction*> Instructions;
  * @param variables list of variables to check existance of variable
  * @return true if variable exists in variables list; false otherwise
  */
-bool variableExists(Variable* variable, Variables variables);
+bool variableExists(std::shared_ptr<Variable> variable, std::list<std::shared_ptr<Variable>> variables);
 
 /**
  * Use this function to print all variables, instructions and labels to console.
@@ -185,6 +189,6 @@ void printAll(Variables variables, Instructions instructions, Labels labels);
  * @param label
  * @return boolean: exists
  */
-bool labelExists(Labels labels, Label* label);
+bool labelExists(Labels labels, std::shared_ptr<Label> label);
 
 #endif

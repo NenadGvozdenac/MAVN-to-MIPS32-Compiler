@@ -153,7 +153,7 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 		Instruction::normalizeAssignmentsToVariables(instructions, variables);
 		syntaxAnalysis.printInstructions(syntaxAnalysis.instructions);
 
-		FileWriter* writer = new FileWriter(outputFile, syntaxAnalysis.instructions, syntaxAnalysis.variables, syntaxAnalysis.labels);
+		shared_ptr<FileWriter> writer = shared_ptr<FileWriter>(new FileWriter(outputFile, syntaxAnalysis.instructions, syntaxAnalysis.variables, syntaxAnalysis.labels));
 
 		cout << "------------------------------------------------------------------------" << endl;
 		cout << "------------------------------------------------------------------------" << endl;
@@ -167,9 +167,7 @@ void TestCompiler(std::string inputFile, std::string outputFile)
 		cout << "------------------------------------------------------------------------" << endl;
 		cout << "------------------- Thank you for using my program! --------------------" << endl;
 		cout << "------------------------------- NenadG ---------------------------------" << endl;
-		cout << "------------------------------------------------------------------------" << endl;
-
-		delete(writer);
+		cout << "------------------------------------------------------------------------" << endl << endl;
 	}
 	catch (runtime_error e)
 	{
